@@ -2,7 +2,6 @@ from pymongo import MongoClient
 from datetime import datetime
 from app.core.config import MONGO_URI
 
-# client = MongoClient("mongodb+srv://New_User1:GbNb4SBWENtBe9eI@cluster0.p5yznsz.mongodb.net/chatbot")
 client = MongoClient(MONGO_URI) 
 db = client["chatbot"]
 
