@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>University Chatbot</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+    }
+    
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    
+    #chat-box {
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      padding: 20px;
+      height: 400px;
+      overflow-y: auto;
+      margin-bottom: 20px;
+      background-color: #f9f9f9;
+    }
+    
+    .message {
+      margin: 10px 0;
+      padding: 10px 15px;
+      border-radius: 8px;
+      max-width: 70%;
+      word-wrap: break-word;
+    }
+    
+    .message.user {
+      background-color: #007bff;
+      color: white;
+      margin-left: auto;
+      text-align: right;
+    }
+    
+    .message.bot {
+      background-color: #e9ecef;
+      color: #333;
+      margin-right: auto;
+    }
+    
+    form {
+      display: flex;
+      gap: 10px;
+    }
+    
+    input[type="text"] {
+      flex: 1;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 14px;
+    }
+    
+    input[type="submit"] {
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    
+    input[type="submit"]:hover {
+      background-color: #0056b3;
+    }
+    
+    .empty-state {
+      text-align: center;
+      color: #999;
+      padding: 50px 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Chatbot</h1>
+
+  <div id="chat-box">
+    {% if conversation_history %}
+      {% for msg in conversation_history %}
+        {% if msg.sender == 'student' %}
+
+         <div class="message user"><strong>You:</strong> {{ msg.message }}</div>
+        {% elif msg.sender == 'ai' %}
+          <div class="message bot"><strong>Bot:</strong> {{ msg.message }}</div>
+        {% endif %}
+      {% endfor %}
+    {% else %}
+      <div class="empty-state">
+        <p>👋 Welcome! How may I assist you.</p>
+      </div>
+    {% endif %}
+  </div>
+
+  <form action="/chat" method="post" id="chat-form">
+    <input type="hidden" name="student_uuid" value="{{ student_uuid or '' }}">
+    
+    {% if not student_uuid %}
+      <!-- Show name input only for first message -->
+      <input type="text" name="name" placeholder="Your Name" required>
+    {% else %}
+      <!-- Keep name hidden after first message -->
+      <input type="hidden" name="name" value="{{ name or 'Guest' }}">
+    {% endif %}
+    
+    <input type="text" name="message" id="message-input" placeholder="Type your question..." required autofocus>
+    <input type="submit" value="Send">
+  </form>
+
+  <script>
+    // Auto-scroll to bottom of chat
+    const chatBox = document.getElementById('chat-box');
+    chatBox.scrollTop = chatBox.scrollHeight;
+    
+    // Clear message input after form submission
+    const form = document.getElementById('chat-form');
+    const messageInput = document.getElementById('message-input');
+    
+    form.addEventListener('submit', function() {
+      // Small delay to allow form to submit before clearing
+      setTimeout(() => {
+        messageInput.value = '';
+      }, 100);
+    });
+  </script>
+</body>
+</html>

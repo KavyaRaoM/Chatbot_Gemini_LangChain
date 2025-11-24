@@ -1,0 +1,38 @@
+# Environment variables (contains API keys and secrets)
+.env
+
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Virtual environments
+env/
+venv/
+.venv/
+ENV/
+
+# Config file (if it contains secrets)
+app/core/config.py
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+.Spotlight-V100
+.Trashes
+
+# Logs
+*.log
+
+# Database files (if you have local SQLite)
+*.db
+*.sqlite
+*.sqlite3
