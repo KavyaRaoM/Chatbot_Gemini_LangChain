@@ -4,7 +4,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from uuid import uuid4
 from app.chatbot2 import chat_with_student
-from app.db import create_student, save_message, get_last_messages
+from app.db import create_student, get_last_messages
 
 
 
@@ -16,7 +16,6 @@ templates = Jinja2Templates(directory="app/templates")
 
 @app.get("/", response_class=HTMLResponse)
 def index(request: Request):
-    """Show the chat page initially with no UUID or messages"""
     return templates.TemplateResponse("index.html", {"request": request})
 
 
@@ -28,9 +27,8 @@ def chat(
     message: str = Form(...)
 ):
     """
-    Handle chat messages:
     1. Create student if new user
-    2. Get AI response using bot.py (which handles saving messages and context)
+    2. Get AI response
     3. Fetch conversation history
     4. Return updated chat page
     """
@@ -46,17 +44,13 @@ def chat(
     ai_response = chat_with_student(student_uuid, message)
     
     print(f"Student UUID: {student_uuid}")
-    print(f"User: {message}")
-    print(f"AI: {ai_response[:100]}...")  # Print first 100 chars
+    # print(f"User: {message}")
+    # print(f"AI: {ai_response[:100]}...")
     
-    # Fetch last 10 messages to show in UI (same as what model uses)
+    # Fetch last 10 messages to show in UI
     conversation_history = get_last_messages(student_uuid, limit=10)
     
    
-    print(f"🔍 Total messages in DB for this user: {len(conversation_history)}")
-    print(f"🔍 Messages: {[msg['message'][:30] for msg in conversation_history]}")
-    
-    
     return templates.TemplateResponse(
         "index.html",
         {

@@ -1,10 +1,6 @@
 
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.messages import HumanMessage, AIMessage, SystemMessage
-from langchain_core.prompts import ChatPromptTemplate
-from app.db import messages_col
-from datetime import datetime
-import os
 from app.db import save_message, get_last_messages
 from app.core.config import GEMINI_API_KEY
 
